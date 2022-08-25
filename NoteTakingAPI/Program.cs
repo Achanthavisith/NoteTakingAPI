@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<NoteDataContext>(connection => connection.UseNpgsql(builder.Configuration.GetConnectionString("NoteTakingDB")));
+builder.Services.AddDbContext<NoteDataContext>(connection =>
+    connection.UseNpgsql(builder.Configuration.GetConnectionString("NoteTakingDB")));
 
 var app = builder.Build();
 

@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NoteTakingAPI.Migrations
 {
     [DbContext(typeof(NoteDataContext))]
-    [Migration("20220823225946_InitialCreate")]
+    [Migration("20220825222613_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -59,13 +59,14 @@ namespace NoteTakingAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<List<int>>("SharedUsers")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<string>("Subject")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<int>("UserId")
@@ -89,15 +90,48 @@ namespace NoteTakingAPI.Migrations
                     b.Property<DateTime>("AccountCreated")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("UserId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("NoteTakingAPI.Models.UserNames", b =>
+                {
+                    b.Property<int>("UserNamesId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserNamesId"));
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("UserNamesId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
+
+                    b.ToTable("UserNames");
                 });
 
             modelBuilder.Entity("NoteTakingAPI.Models.FriendList", b =>
@@ -116,6 +150,17 @@ namespace NoteTakingAPI.Migrations
                     b.HasOne("NoteTakingAPI.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NoteTakingAPI.Models.UserNames", b =>
+                {
+                    b.HasOne("NoteTakingAPI.Models.User", "User")
+                        .WithOne()
+                        .HasForeignKey("NoteTakingAPI.Models.UserNames", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
