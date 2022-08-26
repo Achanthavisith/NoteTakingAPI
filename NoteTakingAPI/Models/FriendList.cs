@@ -6,5 +6,6 @@ namespace NoteTakingAPI.Models
         public int UserId { get; set; }//Fk
         public User User { get; set; }//this FK will relate back to the UserId;
         public List<int> Friends { get; set; } = new List<int>();
+
     }
 }
