@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NoteTakingAPI.Models;
+using NuGet.Protocol;
 
 namespace NoteTakingAPI.Controllers
 {
@@ -17,13 +18,22 @@ namespace NoteTakingAPI.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<List<User>>> GetUsers([FromQuery] string? name)
         {
+
             if (_context.Users == null)
             {
                 return NotFound();
             }
-            return await _context.Users.ToListAsync();
+
+            var User = await _context.Users.ToListAsync();
+
+            if (name != null) 
+            {
+                User = await _context.Users.Where(p => p.Name == name).ToListAsync();
+            }
+
+            return User;
         }
 
         // GET: api/Users/5
