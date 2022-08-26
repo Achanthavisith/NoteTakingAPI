@@ -1,4 +1,4 @@
-.vs/
-NoteTakingAPI/obj/
-NoteTakingAPI/bin/
-NoteTakingAPI/Migrations/
+/.vs/
+/NoteTakingAPI/obj
+/NoteTakingAPI/bin
+/NoteTakingAPI/Migrations
