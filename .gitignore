@@ -1,5 +1,5 @@
-.vs/NoteTakingAPI/**
-.vs/ProjectEvaluation/**
-NoteTakingAPI/obj/**
-NoteTakingAPI/bin/**
-NoteTakingAPI/Migrations/**
+NoteTakingAPI/obj**
+NoteTakingAPI/bin**
+NoteTakingAPI/Migrations**
+.vs/**
+
