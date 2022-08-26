@@ -43,3 +43,7 @@ NoteTakingAPI/bin/Debug/net6.0/NoteTakingAPI.pdb
 NoteTakingAPI/obj/Debug/net6.0/NoteTakingAPI.dll
 NoteTakingAPI/obj/Debug/net6.0/NoteTakingAPI.pdb
 NoteTakingAPI/obj/staticwebassets.pack.sentinel
+.vs/NoteTakingAPI/DesignTimeBuild/.dtbcache.v2
+.vs/NoteTakingAPI/v17/.suo
+.vs/ProjectEvaluation/notetakingapi.metadata.v5.1
+.vs/ProjectEvaluation/notetakingapi.projects.v5.1
