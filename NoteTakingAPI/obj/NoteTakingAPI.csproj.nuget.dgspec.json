@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\andrew\\Desktop\\Github\\notetakingapi\\notetakingapi\\NoteTakingAPI.csproj": {}
+    "C:\\Users\\andrew\\Desktop\\Github\\NoteTakingAPI\\notetakingapi\\NoteTakingAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\andrew\\Desktop\\Github\\notetakingapi\\notetakingapi\\NoteTakingAPI.csproj": {
+    "C:\\Users\\andrew\\Desktop\\Github\\NoteTakingAPI\\notetakingapi\\NoteTakingAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\andrew\\Desktop\\Github\\notetakingapi\\notetakingapi\\NoteTakingAPI.csproj",
+        "projectUniqueName": "C:\\Users\\andrew\\Desktop\\Github\\NoteTakingAPI\\notetakingapi\\NoteTakingAPI.csproj",
         "projectName": "NoteTakingAPI",
-        "projectPath": "C:\\Users\\andrew\\Desktop\\Github\\notetakingapi\\notetakingapi\\NoteTakingAPI.csproj",
+        "projectPath": "C:\\Users\\andrew\\Desktop\\Github\\NoteTakingAPI\\notetakingapi\\NoteTakingAPI.csproj",
         "packagesPath": "C:\\Users\\andrew\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\andrew\\Desktop\\Github\\notetakingapi\\notetakingapi\\obj\\",
+        "outputPath": "C:\\Users\\andrew\\Desktop\\Github\\NoteTakingAPI\\notetakingapi\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
