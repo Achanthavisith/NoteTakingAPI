@@ -9949,24 +9949,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\andrew\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\webbs\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\andrew\\Desktop\\Github\\NoteTakingAPI\\NoteTakingAPI\\NoteTakingAPI.csproj",
+      "projectUniqueName": "C:\\Users\\webbs\\Documents\\GitHub\\NoteTakingAPI\\NoteTakingAPI\\NoteTakingAPI.csproj",
       "projectName": "NoteTakingAPI",
-      "projectPath": "C:\\Users\\andrew\\Desktop\\Github\\NoteTakingAPI\\NoteTakingAPI\\NoteTakingAPI.csproj",
-      "packagesPath": "C:\\Users\\andrew\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\andrew\\Desktop\\Github\\NoteTakingAPI\\NoteTakingAPI\\obj\\",
+      "projectPath": "C:\\Users\\webbs\\Documents\\GitHub\\NoteTakingAPI\\NoteTakingAPI\\NoteTakingAPI.csproj",
+      "packagesPath": "C:\\Users\\webbs\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\webbs\\Documents\\GitHub\\NoteTakingAPI\\NoteTakingAPI\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\andrew\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\webbs\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -9974,7 +9969,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
