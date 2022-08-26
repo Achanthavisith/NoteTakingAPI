@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace NoteTakingAPI.Models
+﻿namespace NoteTakingAPI.Models
 {
     public class Note
     {
