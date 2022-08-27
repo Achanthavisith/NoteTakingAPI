@@ -18,7 +18,7 @@ namespace NoteTakingAPI.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<List<User>>> GetUsers([FromQuery] string? name)
+        public async Task<ActionResult<List<User>>> GetUsers([FromQuery] string? name, int? id)
         {
 
             if (_context.Users == null)
@@ -28,12 +28,27 @@ namespace NoteTakingAPI.Controllers
 
             var User = await _context.Users.ToListAsync();
 
-            if (name != null) 
+            if (name != null && id != null) 
+            {
+                User = await _context.Users.Where(p => p.Name == name).Where(x=> x.UserId == id).ToListAsync();
+            } 
+            else if (name != null)
             {
                 User = await _context.Users.Where(p => p.Name == name).ToListAsync();
             }
+            else if (id != null)
+            {
+                User = await _context.Users.Where(x => x.UserId == id).ToListAsync();
+            }
 
-            return User;
+            if (User.Count == 0)   
+            {
+                return Problem("User with those parameters not found");
+            } 
+            else
+            {
+                return User;
+            }
         }
 
         // GET: api/Users/5
