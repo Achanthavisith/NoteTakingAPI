@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NoteTakingAPI.Migrations
 {
     [DbContext(typeof(NoteDataContext))]
-    [Migration("20220825222613_InitialCreate")]
+    [Migration("20220827001103_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
