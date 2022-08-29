@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace NoteTakingAPI.Migrations
 {
     [DbContext(typeof(NoteDataContext))]
-    [Migration("20220825222613_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20220829003033_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -42,7 +42,8 @@ namespace NoteTakingAPI.Migrations
 
                     b.HasKey("FriendListId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("FriendLists");
                 });
@@ -57,6 +58,9 @@ namespace NoteTakingAPI.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("boolean");
 
                     b.Property<List<int>>("SharedUsers")
                         .HasColumnType("integer[]");
@@ -137,8 +141,8 @@ namespace NoteTakingAPI.Migrations
             modelBuilder.Entity("NoteTakingAPI.Models.FriendList", b =>
                 {
                     b.HasOne("NoteTakingAPI.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne()
+                        .HasForeignKey("NoteTakingAPI.Models.FriendList", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

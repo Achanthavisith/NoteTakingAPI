@@ -43,7 +43,7 @@ namespace NoteTakingAPI.Controllers
 
             if (User.Count == 0)   
             {
-                return Problem("User with those parameters not found");
+                return Problem("User with those parameters not found, or table is empty");
             } 
             else
             {

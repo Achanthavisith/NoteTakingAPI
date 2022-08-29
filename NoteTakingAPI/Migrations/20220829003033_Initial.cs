@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace NoteTakingAPI.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -58,7 +58,8 @@ namespace NoteTakingAPI.Migrations
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     UserId = table.Column<int>(type: "integer", nullable: false),
-                    SharedUsers = table.Column<List<int>>(type: "integer[]", nullable: true)
+                    SharedUsers = table.Column<List<int>>(type: "integer[]", nullable: true),
+                    IsPublic = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -94,7 +95,8 @@ namespace NoteTakingAPI.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_FriendLists_UserId",
                 table: "FriendLists",
-                column: "UserId");
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Notes_UserId",

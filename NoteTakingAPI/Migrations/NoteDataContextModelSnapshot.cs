@@ -40,7 +40,8 @@ namespace NoteTakingAPI.Migrations
 
                     b.HasKey("FriendListId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("FriendLists");
                 });
@@ -55,6 +56,9 @@ namespace NoteTakingAPI.Migrations
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("boolean");
 
                     b.Property<List<int>>("SharedUsers")
                         .HasColumnType("integer[]");
@@ -135,8 +139,8 @@ namespace NoteTakingAPI.Migrations
             modelBuilder.Entity("NoteTakingAPI.Models.FriendList", b =>
                 {
                     b.HasOne("NoteTakingAPI.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
+                        .WithOne()
+                        .HasForeignKey("NoteTakingAPI.Models.FriendList", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
