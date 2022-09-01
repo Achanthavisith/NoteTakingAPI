@@ -12,6 +12,22 @@ namespace NoteTakingAPI.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "Notes",
+                columns: table => new
+                {
+                    NoteId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Subject = table.Column<string>(type: "text", nullable: false),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    UserId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notes", x => x.NoteId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -49,29 +65,6 @@ namespace NoteTakingAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Notes",
-                columns: table => new
-                {
-                    NoteId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Subject = table.Column<string>(type: "text", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    SharedUsers = table.Column<List<int>>(type: "integer[]", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Notes", x => x.NoteId);
-                    table.ForeignKey(
-                        name: "FK_Notes_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserNames",
                 columns: table => new
                 {
@@ -97,15 +90,9 @@ namespace NoteTakingAPI.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Notes_UserId",
-                table: "Notes",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserNames_UserId",
                 table: "UserNames",
-                column: "UserId",
-                unique: true);
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
