@@ -1,14 +1,14 @@
-﻿namespace NoteTakingAPI.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace NoteTakingAPI.Models
 {
     public class UserNames
     {
-
+        [ForeignKey("User")]
         public int UserNamesId { get; set; }
 
         public string UserName { get; set; }
 
-        public int UserId { get; set; }//Fk
-
-        public User User { get; set; }//this FK will relate back to the UserId;
+        public virtual User User { get; set; }
     }
 }

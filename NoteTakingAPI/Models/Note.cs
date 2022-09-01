@@ -12,6 +12,6 @@
 
         public List<int>? SharedUsers { get; set; } = new List<int>();
 
-        public User User { get; set; }//this FK will relate back to the UserId;
+        public bool IsPublic { get; set; } = false;
     }
 }
