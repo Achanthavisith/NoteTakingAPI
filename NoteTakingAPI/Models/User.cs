@@ -12,6 +12,8 @@
 
         public string Password { get; set; }
 
+        public virtual ICollection<Note> Notes { get; set; }
+
         public DateTime AccountCreated { get; set; } = DateTime.UtcNow;
     }
 }

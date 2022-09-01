@@ -56,9 +56,6 @@ namespace NoteTakingAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<List<int>>("SharedUsers")
-                        .HasColumnType("integer[]");
-
                     b.Property<string>("Subject")
                         .IsRequired()
                         .HasColumnType("text");
@@ -71,8 +68,6 @@ namespace NoteTakingAPI.Migrations
                         .HasColumnType("integer");
 
                     b.HasKey("NoteId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Notes");
                 });
@@ -126,8 +121,7 @@ namespace NoteTakingAPI.Migrations
 
                     b.HasKey("UserNamesId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserNames");
                 });
@@ -143,22 +137,11 @@ namespace NoteTakingAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("NoteTakingAPI.Models.Note", b =>
+            modelBuilder.Entity("NoteTakingAPI.Models.UserNames", b =>
                 {
                     b.HasOne("NoteTakingAPI.Models.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("NoteTakingAPI.Models.UserNames", b =>
-                {
-                    b.HasOne("NoteTakingAPI.Models.User", "User")
-                        .WithOne()
-                        .HasForeignKey("NoteTakingAPI.Models.UserNames", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
