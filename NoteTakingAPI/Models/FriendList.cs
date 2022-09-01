@@ -1,10 +1,12 @@
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace NoteTakingAPI.Models
 {
     public class FriendList
     {
+        [ForeignKey("User")]
         public int FriendListId { get; set; }
-        public int UserId { get; set; }
         public List<int> Friends { get; set; } = new List<int>();
-        public User? User { get; set; }
+        public virtual User User { get; set; }
     }
 }
