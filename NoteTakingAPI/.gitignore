@@ -7,6 +7,10 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+#Seamus chose to ignore these
+Migrations/
+NoteTakingAPI/appsettings.json
+
 # User-specific files
 *.rsuser
 *.suo
