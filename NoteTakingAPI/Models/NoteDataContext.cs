@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 namespace NoteTakingAPI.Models
 {
@@ -12,5 +11,9 @@ namespace NoteTakingAPI.Models
         public DbSet<Note> Notes { get; set; }
 
         public DbSet<FriendList> FriendLists { get; set; }
+
+        public DbSet<UserNames> UserNames { get; set; }
+
+        public DbSet<Request> Requests { get; set; }   
     }
 }

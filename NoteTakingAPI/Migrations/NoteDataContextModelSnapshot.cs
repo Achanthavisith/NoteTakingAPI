@@ -26,21 +26,13 @@ namespace NoteTakingAPI.Migrations
             modelBuilder.Entity("NoteTakingAPI.Models.FriendList", b =>
                 {
                     b.Property<int>("FriendListId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FriendListId"));
 
                     b.Property<List<int>>("Friends")
                         .IsRequired()
                         .HasColumnType("integer[]");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("FriendListId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("FriendLists");
                 });
@@ -56,24 +48,47 @@ namespace NoteTakingAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("boolean");
+
                     b.Property<List<int>>("SharedUsers")
-                        .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<string>("Subject")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Title")
+                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.HasKey("NoteId");
+
+                    b.ToTable("Notes");
+                });
+
+            modelBuilder.Entity("NoteTakingAPI.Models.Request", b =>
+                {
+                    b.Property<int>("RequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RequestId"));
+
+                    b.Property<bool>("IsAccepted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.HasKey("NoteId");
+                    b.HasKey("RequestId");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notes");
+                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("NoteTakingAPI.Models.User", b =>
@@ -87,10 +102,20 @@ namespace NoteTakingAPI.Migrations
                     b.Property<DateTime>("AccountCreated")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Password")
+                    b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("UserId");
@@ -98,7 +123,32 @@ namespace NoteTakingAPI.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("NoteTakingAPI.Models.UserNames", b =>
+                {
+                    b.Property<int>("UserNamesId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("UserNamesId");
+
+                    b.ToTable("UserNames");
+                });
+
             modelBuilder.Entity("NoteTakingAPI.Models.FriendList", b =>
+                {
+                    b.HasOne("NoteTakingAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("FriendListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NoteTakingAPI.Models.Request", b =>
                 {
                     b.HasOne("NoteTakingAPI.Models.User", "User")
                         .WithMany()
@@ -109,11 +159,11 @@ namespace NoteTakingAPI.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("NoteTakingAPI.Models.Note", b =>
+            modelBuilder.Entity("NoteTakingAPI.Models.UserNames", b =>
                 {
                     b.HasOne("NoteTakingAPI.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserNamesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
