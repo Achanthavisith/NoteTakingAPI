@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NoteTakingAPI.Models;
+using NuGet.Packaging.Signing;
 using NuGet.Protocol;
 
 namespace NoteTakingAPI.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -18,6 +20,7 @@ namespace NoteTakingAPI.Controllers
 
         // GET: api/Users
         [HttpGet]
+        
         public async Task<ActionResult<List<User>>> GetUsers([FromQuery] string? name, int? id)
         {
 
@@ -50,35 +53,27 @@ namespace NoteTakingAPI.Controllers
                 return User;
             }
         }
-
+    
         // GET: api/Users/5
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        
         public async Task<ActionResult<User>> GetUser(int id)
         {
-            if (_context.Users == null)
-            {
-                return NotFound();
-            }
-
             var user = await _context.Users.FindAsync(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return user;
+            return user == null ? NotFound() : Ok(user);
         }
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutUser(int id, User user)
         {
-            if (id != user.UserId)
-            {
-                return BadRequest();
-            }
+            if (id != user.UserId) return BadRequest();
 
             _context.Entry(user).State = EntityState.Modified;
 
@@ -104,6 +99,7 @@ namespace NoteTakingAPI.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         public async Task<ActionResult<User>> PostUser(User user)
         {
             if (_context.Users == null)
@@ -132,6 +128,8 @@ namespace NoteTakingAPI.Controllers
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteUser(int id)
         {
             if (_context.Users == null)
