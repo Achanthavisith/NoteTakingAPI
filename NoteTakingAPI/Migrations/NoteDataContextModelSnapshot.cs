@@ -26,21 +26,13 @@ namespace NoteTakingAPI.Migrations
             modelBuilder.Entity("NoteTakingAPI.Models.FriendList", b =>
                 {
                     b.Property<int>("FriendListId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FriendListId"));
 
                     b.Property<List<int>>("Friends")
                         .IsRequired()
                         .HasColumnType("integer[]");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("FriendListId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("FriendLists");
                 });
@@ -56,6 +48,12 @@ namespace NoteTakingAPI.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("boolean");
+
+                    b.Property<List<int>>("SharedUsers")
+                        .HasColumnType("integer[]");
+
                     b.Property<string>("Subject")
                         .IsRequired()
                         .HasColumnType("text");
@@ -64,12 +62,33 @@ namespace NoteTakingAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("NoteId");
 
                     b.ToTable("Notes");
+                });
+
+            modelBuilder.Entity("NoteTakingAPI.Models.Request", b =>
+                {
+                    b.Property<int>("RequestId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RequestId"));
+
+                    b.Property<bool>("IsAccepted")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("ReceiverId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("RequestId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Requests");
                 });
 
             modelBuilder.Entity("NoteTakingAPI.Models.User", b =>
@@ -107,12 +126,6 @@ namespace NoteTakingAPI.Migrations
             modelBuilder.Entity("NoteTakingAPI.Models.UserNames", b =>
                 {
                     b.Property<int>("UserNamesId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("UserNamesId"));
-
-                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
                     b.Property<string>("UserName")
@@ -121,12 +134,21 @@ namespace NoteTakingAPI.Migrations
 
                     b.HasKey("UserNamesId");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("UserNames");
                 });
 
             modelBuilder.Entity("NoteTakingAPI.Models.FriendList", b =>
+                {
+                    b.HasOne("NoteTakingAPI.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("FriendListId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("NoteTakingAPI.Models.Request", b =>
                 {
                     b.HasOne("NoteTakingAPI.Models.User", "User")
                         .WithMany()
@@ -141,7 +163,7 @@ namespace NoteTakingAPI.Migrations
                 {
                     b.HasOne("NoteTakingAPI.Models.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserNamesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

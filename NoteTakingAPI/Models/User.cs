@@ -1,4 +1,6 @@
-﻿namespace NoteTakingAPI.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace NoteTakingAPI.Models
 {
     public class User
     {
@@ -12,7 +14,9 @@
 
         public string Password { get; set; }
 
-        public virtual ICollection<Note> Notes { get; set; }
+        private ICollection<Note> Notes { get; set; }
+
+        private ICollection<Request> Requests { get; set; }
 
         public DateTime AccountCreated { get; set; } = DateTime.UtcNow;
     }

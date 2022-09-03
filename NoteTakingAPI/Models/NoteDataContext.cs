@@ -14,6 +14,6 @@ namespace NoteTakingAPI.Models
 
         public DbSet<UserNames> UserNames { get; set; }
 
-        
+        public DbSet<Request> Requests { get; set; }   
     }
 }
