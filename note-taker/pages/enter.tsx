@@ -8,21 +8,27 @@ export default function enter({}) {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
+  const getUser = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const response = await axios.get("http://localhost:5209/api/Users");
+    console.log(response);
+  };
+
   const addUser = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     type User = {
-      Name: string;
-      LastName: string;
-      Email: string;
-      Password: string;
+      name: string;
+      lastName: string;
+      email: string;
+      password: string;
     };
 
     try {
       await axios.post<User>(
         "http://localhost:5209/api/Users",
         {
-          name: firstName,
+          Name: firstName,
           LastName: lastName,
           Email: email,
           Password: password,
@@ -86,6 +92,9 @@ export default function enter({}) {
             </label>
           </label>
           <button type="submit">Submit</button>
+        </form>
+        <form onSubmit={getUser}>
+          <button>Get</button>
         </form>
       </main>
     </>
