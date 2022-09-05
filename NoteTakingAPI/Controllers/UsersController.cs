@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
 using NoteTakingAPI.Models;
-using NuGet.Protocol;
+using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Xml.Linq;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace NoteTakingAPI.Controllers
 {
@@ -32,23 +32,30 @@ namespace NoteTakingAPI.Controllers
 
             var User = await _context.Users.ToListAsync();
 
-            if (name != null && id != null) 
+            if (name != null && id != null)
             {
-                User = await _context.Users.Where(p => p.Name == name).Where(x=> x.UserId == id).ToListAsync();
-            } 
+                User = await _context.Users
+                    .Where(p => p.Name == name)
+                    .Where(x => x.UserId == id)
+                    .ToListAsync();
+            }
             else if (name != null)
             {
-                User = await _context.Users.Where(p => p.Name == name).ToListAsync();
+                User = await _context.Users
+                    .Where(p => p.Name == name)
+                    .ToListAsync();
             }
             else if (id != null)
             {
-                User = await _context.Users.Where(x => x.UserId == id).ToListAsync();
+                User = await _context.Users
+                    .Where(x => x.UserId == id)
+                    .ToListAsync();
             }
 
-            if (User.Count == 0)   
+            if (User.Count == 0)
             {
                 return Problem("User with those parameters not found, or table is empty");
-            } 
+            }
             else
             {
                 return User;
@@ -136,10 +143,11 @@ namespace NoteTakingAPI.Controllers
                     user.LastName = userReg.LastName;
                     user.PasswordHash = passwordHash;
                     user.PasswordSalt = passwordSalt;
-
+                    //add the user and save 
                     _context.Users.Add(user);
                     await _context.SaveChangesAsync();
-                } catch
+                }
+                catch
                 {
                     return Problem("Check Parameters or fields");//probably redundant try block
                 }
@@ -163,17 +171,22 @@ namespace NoteTakingAPI.Controllers
             else if (userReg.Email == "" || userReg.Password == "")
             {
                 return Problem("All fields required.");
-            } 
+            }
             else
             {
-                var user = await _context.Users.Where(user => user.Email == userReg.Email).FirstOrDefaultAsync();
-                if(!VerifyPasswordHash(userReg.Password, user.PasswordHash, user.PasswordSalt))
+                //get the user by email//firstOrDefaultmethod returns the first row back.
+                var user = await _context.Users
+                    .Where(user => user.Email == userReg.Email)
+                    .FirstOrDefaultAsync();
+
+                if (!VerifyPasswordHash(userReg.Password, user.PasswordHash, user.PasswordSalt))
                 {
                     return Problem("Password or email is incorrect.");
                 }
                 else
                 {
-                    return Ok("Some Token");
+                    string token = CreateToken(user);
+                    return Ok(token);
                 }
             }
         }
@@ -186,13 +199,16 @@ namespace NoteTakingAPI.Controllers
             {
                 return NotFound();
             }
+
             var user = await _context.Users.FindAsync(id);
+
             if (user == null)
             {
                 return NotFound();
             }
 
             _context.Users.Remove(user);
+
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -212,16 +228,45 @@ namespace NoteTakingAPI.Controllers
         {
             using var hmac = new HMACSHA512();
 
-            passwordSalt = hmac.Key;
-            passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            passwordSalt = hmac.Key;//generates a key to use for hash
+
+            passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));//use key to hash the password string.
         }
 
         private static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using var hmac = new HMACSHA512(passwordSalt);
-            var computeHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            using var hmac = new HMACSHA512(passwordSalt);//gets the password key to compute hash
 
-            return computeHash.SequenceEqual(passwordHash);
+            var computeHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));//use key to compute the hash 
+
+            return computeHash.SequenceEqual(passwordHash);// checks if the entered password hash matches the db hash
+        }
+
+        private string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            var secretKey = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build()
+                .GetSection("Jwt")["Token"];
+
+            var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(secretKey));
+
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var token = new JwtSecurityToken(
+                claims: claims,
+                expires: DateTime.Now.AddHours(1),
+                signingCredentials: cred
+                );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
         }
     }
 }
