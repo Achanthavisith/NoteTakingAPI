@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.EntityFrameworkCore;
 using NoteTakingAPI.Models;
 using NuGet.Protocol;
@@ -149,7 +150,7 @@ namespace NoteTakingAPI.Controllers
 
         // POST: api/Users/login
         [HttpPost("login")]
-        public async Task<ActionResult<User>> LoginUser(UserReg userReg)//use the userReg class to use plain text password/etc and other fields to mimic the user model/class
+        public async Task<ActionResult<string>> LoginUser(UserReg userReg)//use the userReg class to use plain text password/etc and other fields to mimic the user model/class
         {
             if (_context.Users == null)
             {
@@ -157,14 +158,24 @@ namespace NoteTakingAPI.Controllers
             }
             if (!UserExists(userReg.Email))
             {
-                return Problem("Check email or password.");
+                return Problem("Password or email is incorrect.");
             }
             else if (userReg.Email == "" || userReg.Password == "")
             {
                 return Problem("All fields required.");
             } 
-  
-            return Ok("Some Token");// another day
+            else
+            {
+                var user = await _context.Users.Where(user => user.Email == userReg.Email).FirstOrDefaultAsync();
+                if(!VerifyPasswordHash(userReg.Password, user.PasswordHash, user.PasswordSalt))
+                {
+                    return Problem("Password or email is incorrect.");
+                }
+                else
+                {
+                    return Ok("Some Token");
+                }
+            }
         }
 
         // DELETE: api/Users/5
@@ -207,7 +218,7 @@ namespace NoteTakingAPI.Controllers
 
         private static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
         {
-            using var hmac = new HMACSHA512(user.PasswordSalt);
+            using var hmac = new HMACSHA512(passwordSalt);
             var computeHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
 
             return computeHash.SequenceEqual(passwordHash);
