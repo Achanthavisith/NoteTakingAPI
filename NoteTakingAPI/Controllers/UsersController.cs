@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NoteTakingAPI.Models;
 using NuGet.Protocol;
+using System.Security.Cryptography;
+using System.Xml.Linq;
 
 namespace NoteTakingAPI.Controllers
 {
@@ -101,33 +104,67 @@ namespace NoteTakingAPI.Controllers
             return NoContent();
         }
 
+        public static readonly User user = new();//new user object for the registration
+
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<User>> PostUser(UserReg userReg)//use the userReg class to use plain text password/etc and other fields to mimic the user model/class
+        {
+
+            if (_context.Users == null)
+            {
+                return Problem("Entity set 'NoteDataContext.Users'  is null.");
+            }
+            if (UserExists(userReg.Email))
+            {
+                return Problem("User already exists");
+            }
+            else if (userReg.Email == "" || userReg.Password == "" || userReg.Name == "" || userReg.Password == "" || userReg.LastName == "")
+            {
+                return Problem("All fields required.");
+            }
+            else
+            {
+                try
+                {
+                    CreatedPasswordHash(userReg.Password, out byte[] passwordHash, out byte[] passwordSalt);//hash the password
+                    //covert all fields for data insertion
+                    user.Email = userReg.Email;
+                    user.Name = userReg.Name;
+                    user.LastName = userReg.LastName;
+                    user.PasswordHash = passwordHash;
+                    user.PasswordSalt = passwordSalt;
+
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+                } catch
+                {
+                    return Problem("Check Parameters or fields");//probably redundant try block
+                }
+            }
+
+            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+        }
+
+        // POST: api/Users/login
+        [HttpPost("login")]
+        public async Task<ActionResult<User>> LoginUser(UserReg userReg)//use the userReg class to use plain text password/etc and other fields to mimic the user model/class
         {
             if (_context.Users == null)
             {
                 return Problem("Entity set 'NoteDataContext.Users'  is null.");
             }
-
-            _context.Users.Add(user);
-
-            if (user.Email == "" || user.Password == "" || user.Name == "" || user.Password == "" || user.LastName == "")
+            if (!UserExists(userReg.Email))
+            {
+                return Problem("Check email or password.");
+            }
+            else if (userReg.Email == "" || userReg.Password == "")
             {
                 return Problem("All fields required.");
-            }
-            else if (UserExists(user.Email))
-            {
-                return Problem("User already exists");
-            }
-            else
-            {
-                _context.Users.Add(user);
-                await _context.SaveChangesAsync();
-            }
-
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+            } 
+  
+            return Ok("Some Token");// another day
         }
 
         // DELETE: api/Users/5
@@ -160,6 +197,20 @@ namespace NoteTakingAPI.Controllers
             return (_context.Users?.Any(e => e.UserId == id)).GetValueOrDefault();
         }
 
+        private static void CreatedPasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using var hmac = new HMACSHA512();
 
+            passwordSalt = hmac.Key;
+            passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+        }
+
+        private static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt)
+        {
+            using var hmac = new HMACSHA512(user.PasswordSalt);
+            var computeHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+
+            return computeHash.SequenceEqual(passwordHash);
+        }
     }
 }
