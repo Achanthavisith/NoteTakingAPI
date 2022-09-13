@@ -9,22 +9,18 @@ namespace NoteTakingAPI.Models
 
         public string? Email { get; set; }
 
-        [JsonIgnore]
         public string? Name { get; set; }
 
-        [JsonIgnore]
         public string? LastName { get; set; }
 
-        [JsonIgnore]
         public byte[]? PasswordHash { get; set; }
 
-        [JsonIgnore]
         public byte[]? PasswordSalt { get; set; }
 
         [JsonIgnore]
-        public ICollection<Note>? Notes { get; set; }
+        private ICollection<Note>? Notes { get; set; }
         [JsonIgnore]
-        public ICollection<Request>? Requests { get; set; }
+        private ICollection<Request>? Requests { get; set; }
 
         public DateTime AccountCreated { get; set; } = DateTime.UtcNow;
     }

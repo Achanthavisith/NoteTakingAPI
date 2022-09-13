@@ -82,7 +82,7 @@ namespace NoteTakingAPI.Controllers
         }
 
         // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /* too much work to get every field for user changes
         [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> PutUser(int id, User user)
         {
@@ -95,7 +95,7 @@ namespace NoteTakingAPI.Controllers
 
             try
             {
-                    await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -111,6 +111,7 @@ namespace NoteTakingAPI.Controllers
 
             return NoContent();
         }
+        */
 
         public static readonly User user = new();//new user object for the registration
 

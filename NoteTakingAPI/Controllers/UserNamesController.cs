@@ -24,10 +24,10 @@ namespace NoteTakingAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserNames>>> GetUserNames()
         {
-          if (_context.UserNames == null)
-          {
-              return NotFound();
-          }
+            if (_context.UserNames == null)
+            {
+                return NotFound();
+            }
             return await _context.UserNames.ToListAsync();
         }
 
@@ -35,10 +35,10 @@ namespace NoteTakingAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserNames>> GetUserNames(int id)
         {
-          if (_context.UserNames == null)
-          {
-              return NotFound();
-          }
+            if (_context.UserNames == null)
+            {
+                return NotFound();
+            }
             var userNames = await _context.UserNames.FindAsync(id);
 
             if (userNames == null)
@@ -85,10 +85,10 @@ namespace NoteTakingAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<UserNames>> PostUserNames(UserNames userNames)
         {
-          if (_context.UserNames == null)
-          {
-              return Problem("Entity set 'NoteDataContext.UserNames'  is null.");
-          }
+            if (_context.UserNames == null)
+            {
+                return Problem("Entity set 'NoteDataContext.UserNames'  is null.");
+            }
             _context.UserNames.Add(userNames);
             try
             {
