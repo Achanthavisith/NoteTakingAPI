@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authorization;
-using System.ComponentModel.DataAnnotations;
 
 namespace NoteTakingAPI.Controllers
 {
@@ -96,7 +95,7 @@ namespace NoteTakingAPI.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                    await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -247,7 +246,7 @@ namespace NoteTakingAPI.Controllers
         {
             List<Claim> claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Name, user.Email)
             };
 
             var secretKey = new ConfigurationBuilder()
