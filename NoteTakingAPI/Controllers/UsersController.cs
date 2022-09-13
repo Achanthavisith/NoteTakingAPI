@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Extensions.Configuration;
 using NoteTakingAPI.Models;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 
 namespace NoteTakingAPI.Controllers
 {
@@ -21,7 +22,7 @@ namespace NoteTakingAPI.Controllers
         }
 
         // GET: api/Users
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<ActionResult<List<User>>> GetUsers([FromQuery] string? name, int? id)
         {
 
@@ -63,7 +64,7 @@ namespace NoteTakingAPI.Controllers
         }
 
         // GET: api/Users/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}"), Authorize]
         public async Task<ActionResult<User>> GetUser(int id)
         {
             if (_context.Users == null)
@@ -83,7 +84,7 @@ namespace NoteTakingAPI.Controllers
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{id}"), Authorize]
         public async Task<IActionResult> PutUser(int id, User user)
         {
             if (id != user.UserId)
@@ -192,7 +193,7 @@ namespace NoteTakingAPI.Controllers
         }
 
         // DELETE: api/Users/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}"), Authorize]
         public async Task<IActionResult> DeleteUser(int id)
         {
             if (_context.Users == null)
@@ -242,7 +243,7 @@ namespace NoteTakingAPI.Controllers
             return computeHash.SequenceEqual(passwordHash);// checks if the entered password hash matches the db hash
         }
 
-        private string CreateToken(User user)
+        private static string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>
             {
